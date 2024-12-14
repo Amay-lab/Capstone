@@ -1,0 +1,112 @@
+class Product:
+    """
+    Represents a single product in the inventory.
+    """
+    def __init__(self, product_id, name, product_description, price, quantity):
+        self.product_id = product_id
+        self.name = name
+        self.product_description = product_description
+        self.price = price
+        self.quantity = quantity
+
+    def update_quantity(self, new_quantity):
+        """Updates the stock quantity of the product."""
+        if new_quantity >= 0:
+            self.quantity = new_quantity
+            print(f"Stock quantity for '{self.name}' updated to {self.quantity}.\n")
+        else:
+            print("Invalid quantity. It must be zero or a positive number.\n")
+
+    def total_value(self):
+        """Calculates the total value of the product based on price and quantity."""
+        return self.price * self.quantity
+
+    def __str__(self):
+        return f"ID: {self.product_id}, Name: {self.name}, Description: {self.product_description}, Price: ${self.price:.2f}, Quantity: {self.quantity}, Total Value: ${self.total_value():.2f}"
+
+class InventoryManagementSystem:
+    """
+    A system to manage product inventory.
+    """
+    def __init__(self):
+        self.products = []
+
+    def add_product(self, product_id, name, product_description, price, quantity):
+        """Adds a new product to the inventory."""
+        for product in self.products:
+            if product.product_id == product_id:
+                print("A product with this ID already exists.\n")
+                return
+
+        new_product = Product(product_id, name, product_description, price, quantity)
+        self.products.append(new_product)
+        print(f"Product '{name}' has been added.\n")
+
+    def update_product_quantity(self, product_id, new_quantity):
+        """Updates the stock quantity of a specific product."""
+        for product in self.products:
+            if product.product_id == product_id:
+                product.update_quantity(new_quantity)
+                return
+        print("Product not found.\n")
+
+    def display_products(self):
+        """Displays all products in the inventory."""
+        if not self.products:
+            print("No products in the inventory.\n")
+        else:
+            print("Product List:")
+            for idx, product in enumerate(self.products, start=1):
+                print(f"{idx}. {product}")
+            print()
+
+    def calculate_total_inventory_value(self):
+        """Calculates and displays the total value of the inventory."""
+        if not self.products:
+            print("No products in the inventory to calculate value.\n")
+            return
+
+        total_value = sum(product.total_value() for product in self.products)
+        print(f"Total Inventory Value: ${total_value:.2f}\n")
+
+    def run(self):
+        """Runs the inventory management system in a loop."""
+        while True:
+            print("Inventory Management System")
+            print("1. Add a new product")
+            print("2. Update stock quantity")
+            print("3. Display all products")
+            print("4. Calculate total inventory value")
+            print("5. Exit")
+            choice = input("Enter your choice (1-5): ")
+
+            if choice == '1':
+                product_id = input("Enter product ID: ")
+                name = input("Enter product name: ")
+                product_description = input("Enter product description: ")
+                price = float(input("Enter price per unit: "))
+                quantity = int(input("Enter stock quantity: "))
+                self.add_product(product_id, name, product_description, price, quantity)
+
+            elif choice == '2':
+                product_id = input("Enter product ID: ")
+                new_quantity = int(input("Enter new stock quantity: "))
+                self.update_product_quantity(product_id, new_quantity)
+
+            elif choice == '3':
+                self.display_products()
+
+            elif choice == '4':
+                self.calculate_total_inventory_value()
+
+            elif choice == '5':
+                print("Exiting the program. Goodbye!")
+                break
+
+            else:
+                print("Invalid choice. Please try again.\n")
+
+# Main Program
+if __name__ == "__main__":
+    system = InventoryManagementSystem()
+    system.run()
